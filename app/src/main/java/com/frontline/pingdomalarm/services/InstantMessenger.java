@@ -10,7 +10,9 @@ import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
 import android.widget.RemoteViews;
 
+import com.frontline.pingdomalarm.domain.AlarmTrigger;
 import com.frontline.pingdomalarm.intents.AlarmTonePlayer;
+import com.frontline.pingdomalarm.util.AlarmTriggerManager;
 import com.frontline.pingdomalarm.util.StringConstants;
 
 import java.lang.reflect.Field;
@@ -33,13 +35,16 @@ public class InstantMessenger extends AccessibilityService {
             Notification notification = (Notification) event.getParcelableData();
             List<String> notificationText = getText(notification);
             Log.i("notification:\n\n\n\n\n", ""+notificationText);
+            List<AlarmTrigger> alarmTriggers = AlarmTriggerManager.getAllAlarmTriggers();
             for (String string: notificationText)
             {
                 Log.i("looping", "looping through");
-                if (string.contains("frontlinesms.com")) {
-                    Log.i("notificatin info recied:", "" + getText(notification));
-                    AlarmTonePlayer.soundAlarm(this);
-                    return;
+                for (AlarmTrigger alarmTrigger: alarmTriggers){
+                    if (string.contains(alarmTrigger.getMatchText())) {
+                        Log.i("notificatin info recied:", "" + getText(notification));
+                        AlarmTonePlayer.soundAlarm(this);
+                        return;
+                    }
                 }
             }
 

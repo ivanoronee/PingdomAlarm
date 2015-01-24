@@ -25,4 +25,8 @@ public class AlarmTrigger extends SugarRecord<AlarmTrigger> {
     public String toString(){
         return matchText;
     }
+
+    public String getMatchText(){
+        return matchText;
+    }
 }
