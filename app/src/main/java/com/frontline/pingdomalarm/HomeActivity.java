@@ -40,10 +40,10 @@ public class HomeActivity extends Activity {
                 android.R.layout.simple_list_item_1, alarmTriggers);
         alarmTriggerList.setAdapter(adapter);
 
-        alarmTriggerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        alarmTriggerList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 
             @Override
-            public void onItemClick(AdapterView<?> parent, final View view,
+            public boolean onItemLongClick(AdapterView<?> parent, final View view,
                                     int position, long id) {
 
                 final AlarmTrigger item = (AlarmTrigger) parent.getItemAtPosition(position);
@@ -51,14 +51,13 @@ public class HomeActivity extends Activity {
                         .withEndAction(new Runnable() {
                             @Override
                             public void run() {
-                                Log.i("remo", "attemping\n\n\n\n");
                                 adapter.remove(item);
                                 alarmTriggers.remove(item);
-                                Log.i("remo", "finished\n\n\n\n");
                                 adapter.notifyDataSetChanged();
                                 view.setAlpha(1);
                             }
                         });
+                return true;
             }
 
         });
