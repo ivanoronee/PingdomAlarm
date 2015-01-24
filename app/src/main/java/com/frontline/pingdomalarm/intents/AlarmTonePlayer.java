@@ -5,12 +5,11 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
-import android.content.Intent;
 import android.content.Context;
+import android.content.Intent;
 import android.media.MediaPlayer;
-import android.util.Log;
 
-import com.frontline.pingdomalarm.AlarmActivity;
+import com.frontline.pingdomalarm.HomeActivity;
 import com.frontline.pingdomalarm.R;
 import com.frontline.pingdomalarm.util.StringConstants;
 
@@ -65,7 +64,7 @@ public class AlarmTonePlayer extends IntentService {
                 .setContentTitle(StringConstants.ALARM_NOTIFICATION_HEADER)
                 .setContentText("You gotta check the cloud!!");
 
-        Intent resultIntent = new Intent(this, AlarmActivity.class);
+        Intent resultIntent = new Intent(this, HomeActivity.class);
 
         // The stack builder object will contain an artificial back stack for the
         // started Activity.
@@ -73,7 +72,7 @@ public class AlarmTonePlayer extends IntentService {
         // your application to the Home screen.
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
         // Adds the back stack for the Intent (but not the Intent itself)
-        stackBuilder.addParentStack(AlarmActivity.class);
+        stackBuilder.addParentStack(HomeActivity.class);
         // Adds the Intent that starts the Activity to the top of the stack
         stackBuilder.addNextIntent(resultIntent);
         PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
