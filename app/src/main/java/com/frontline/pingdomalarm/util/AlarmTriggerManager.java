@@ -17,4 +17,8 @@ public class AlarmTriggerManager {
     public static List<AlarmTrigger> getAllAlarmTriggers(){
         return AlarmTrigger.listAll(AlarmTrigger.class);
     }
+
+    public static void deleteAlarmTrigger(AlarmTrigger alarmTrigger){
+        alarmTrigger.delete();
+    }
 }

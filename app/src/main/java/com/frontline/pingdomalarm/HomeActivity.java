@@ -56,10 +56,8 @@ public class HomeActivity extends Activity {
                         .withEndAction(new Runnable() {
                             @Override
                             public void run() {
-                                Log.i("remo", "attemping\n\n\n\n");
                                 adapter.remove(item);
-                                //alarmTriggers.remove(item);
-                                Log.i("remo", "finished\n\n\n\n");
+                                AlarmTriggerManager.deleteAlarmTrigger(item);
                                 adapter.notifyDataSetChanged();
                                 view.setAlpha(1);
                             }
