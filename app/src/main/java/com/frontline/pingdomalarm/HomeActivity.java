@@ -23,6 +23,7 @@ import android.widget.Switch;
 import com.frontline.pingdomalarm.domain.AlarmTrigger;
 import com.frontline.pingdomalarm.intents.AlarmTonePlayer;
 import com.frontline.pingdomalarm.util.AlarmTriggerManager;
+import com.frontline.pingdomalarm.util.NotificationsUtil;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -45,7 +46,7 @@ public class HomeActivity extends Activity {
         toggleAlarmSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (!isChecked){
+                if (!isChecked) {
                     AlarmTonePlayer.stopAlarm();
                     toggleAlarmSwitch.setEnabled(false);
                 }
