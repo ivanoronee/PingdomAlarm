@@ -15,10 +15,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Switch;
 
 import com.frontline.pingdomalarm.domain.AlarmTrigger;
+import com.frontline.pingdomalarm.intents.AlarmTonePlayer;
 import com.frontline.pingdomalarm.util.AlarmTriggerManager;
 
 import java.lang.reflect.Method;
@@ -30,13 +33,38 @@ import java.util.List;
 public class HomeActivity extends Activity {
 
     private ListView alarmTriggerList;
+    private Switch toggleAlarmSwitch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         alarmTriggerList = (ListView) findViewById(R.id.alarmTriggers);
+        toggleAlarmSwitch = (Switch) findViewById(R.id.alarm_toggle_switch);
+        updateToggleAlarmSwitch();
+        toggleAlarmSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (!isChecked){
+                    AlarmTonePlayer.stopAlarm();
+                    toggleAlarmSwitch.setEnabled(false);
+                }
+            }
+        });
         attachAdapterToAlarmTriggerListView();
+    }
+
+    private void updateToggleAlarmSwitch(){
+        if (AlarmTonePlayer.isAlarmOn()){
+            toggleAlarmSwitch.setEnabled(true);
+            toggleAlarmSwitch.setChecked(true);
+        }
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        updateToggleAlarmSwitch();
     }
 
     private void attachAdapterToAlarmTriggerListView() {

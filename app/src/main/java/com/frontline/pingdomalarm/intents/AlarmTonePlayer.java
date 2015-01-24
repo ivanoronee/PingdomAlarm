@@ -18,6 +18,7 @@ import com.frontline.pingdomalarm.util.StringConstants;
 public class AlarmTonePlayer extends IntentService {
     public static final int ALARM_NOTIFICATION_ID = 1;
     private static MediaPlayer mediaPlayer;
+    private static boolean alarmOn = false;
 
 
     public AlarmTonePlayer() {
@@ -33,6 +34,7 @@ public class AlarmTonePlayer extends IntentService {
     public static void stopAlarm() {
         if (mediaPlayer != null) {
             mediaPlayer.stop();
+            alarmOn = false;
         }
     }
 
@@ -41,15 +43,19 @@ public class AlarmTonePlayer extends IntentService {
         if (intent != null) {
             final String action = intent.getAction();
             if (StringConstants.ACTION_SOUNND_ALARM.equals(action)) {
-                ;
                 handleSoundAlarm();
             }
         }
     }
 
+    public static boolean isAlarmOn(){
+        return alarmOn;
+    }
+
     private void handleSoundAlarm() {
         mediaPlayer = MediaPlayer.create(this, R.raw.pingdom_alarm);
         mediaPlayer.start();
+        alarmOn = true;
         createAlarmRunningNotification();
     }
 
