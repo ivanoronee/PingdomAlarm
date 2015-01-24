@@ -5,5 +5,6 @@ package com.frontline.pingdomalarm.util;
  */
 public class StringConstants {
     public static final String ACTION_SOUNND_ALARM = "pingdomalarm.ACTION_SOUNND_ALARM";
+    public static final String ALARM_NOTIFICATION_HEADER = "PingDom alarm";
 }
 

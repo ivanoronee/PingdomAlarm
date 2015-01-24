@@ -11,6 +11,7 @@ import android.view.accessibility.AccessibilityEvent;
 import android.widget.RemoteViews;
 
 import com.frontline.pingdomalarm.intents.AlarmTonePlayer;
+import com.frontline.pingdomalarm.util.StringConstants;
 
 import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
@@ -26,12 +27,13 @@ public class InstantMessenger extends AccessibilityService {
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
         if (event.getEventType() == AccessibilityEvent.TYPE_NOTIFICATION_STATE_CHANGED) {
-            if (event.getText().toString().contains("pingdom alert!!")) {
+            if (event.getText().toString().contains(StringConstants.ALARM_NOTIFICATION_HEADER)) {
                 return;
             }
             Notification notification = (Notification) event.getParcelableData();
-            Log.i("notification:\n\n\n\n\n", ""+getText(notification));
-            for (String string: getText(notification))
+            List<String> notificationText = getText(notification);
+            Log.i("notification:\n\n\n\n\n", ""+notificationText);
+            for (String string: notificationText)
             {
                 Log.i("looping", "looping through");
                 if (string.contains("frontlinesms.com")) {
@@ -63,6 +65,10 @@ public class InstantMessenger extends AccessibilityService {
 
     public static List<String> getText(Notification notification) {
         // We have to extract the information from the view
+        if (notification == null){
+            Log.e("null", "notification was null");
+            return null;
+        }
         RemoteViews views = notification.bigContentView;
         if (views == null) views = notification.contentView;
         if (views == null) return null;
