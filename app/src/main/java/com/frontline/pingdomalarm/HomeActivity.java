@@ -29,12 +29,17 @@ import java.util.List;
 
 public class HomeActivity extends Activity {
 
+    private ListView alarmTriggerList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        final ListView alarmTriggerList = (ListView) findViewById(R.id.alarmTriggers);
+        alarmTriggerList = (ListView) findViewById(R.id.alarmTriggers);
+        attachAdapterToAlarmTriggerListView();
+    }
+
+    private void attachAdapterToAlarmTriggerListView() {
         final List<AlarmTrigger> alarmTriggers = AlarmTriggerManager.getAllAlarmTriggers();
         final StableArrayAdapter adapter = new StableArrayAdapter(this,
                 android.R.layout.simple_list_item_1, alarmTriggers);
@@ -44,15 +49,17 @@ public class HomeActivity extends Activity {
 
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, final View view,
-                                    int position, long id) {
+                                           int position, long id) {
 
                 final AlarmTrigger item = (AlarmTrigger) parent.getItemAtPosition(position);
                 view.animate().setDuration(2000).alpha(0)
                         .withEndAction(new Runnable() {
                             @Override
                             public void run() {
+                                Log.i("remo", "attemping\n\n\n\n");
                                 adapter.remove(item);
-                                alarmTriggers.remove(item);
+                                //alarmTriggers.remove(item);
+                                Log.i("remo", "finished\n\n\n\n");
                                 adapter.notifyDataSetChanged();
                                 view.setAlpha(1);
                             }
@@ -61,6 +68,7 @@ public class HomeActivity extends Activity {
             }
 
         });
+        adapter.notifyDataSetChanged();
     }
 
     @Override
@@ -82,7 +90,7 @@ public class HomeActivity extends Activity {
             return true;
         }
 
-        if (id == R.id.action_add_trigger){
+        if (id == R.id.action_add_trigger) {
             AlarmTriggerManager alarmTriggerManager = new AlarmTriggerManager();
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("Add alarm trigger");
@@ -94,10 +102,11 @@ public class HomeActivity extends Activity {
                 public void onClick(DialogInterface dialogInterface, int i) {
                     String triggerText = triggerTextInputfield.getText().toString();
                     AlarmTriggerManager.createAlarmTrigger(triggerText);
+                    attachAdapterToAlarmTriggerListView();
                 }
             });
 
-            builder.setNegativeButton("Cancel",null);
+            builder.setNegativeButton("Cancel", null);
 
             builder.create().show();
 
@@ -121,10 +130,10 @@ public class HomeActivity extends Activity {
         @Override
         public long getItemId(int position) {
             //TODO remove this ugly hack of the ifs
-            if (position == items.size() && position != 0){
+            if (position == items.size() && position != 0) {
                 position--;
             }
-            if (position == 0){
+            if (position == 0) {
                 return 0L;
             }
             return items.get(position).getId();
