@@ -52,7 +52,7 @@ public class HomeActivity extends Activity {
                                            int position, long id) {
 
                 final AlarmTrigger item = (AlarmTrigger) parent.getItemAtPosition(position);
-                view.animate().setDuration(2000).alpha(0)
+                view.animate().setDuration(1000).alpha(0)
                         .withEndAction(new Runnable() {
                             @Override
                             public void run() {
