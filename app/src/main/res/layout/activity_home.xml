@@ -15,15 +15,28 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:checked="false"
-        android:enabled="false" />
+        android:enabled="false"
+        android:textColor="#ffffffff" />
 
     <ListView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/alarmTriggers"
+        android:choiceMode="multipleChoice"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/textView" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/alarm_triggers"
+        android:id="@+id/textView"
+        android:textColor="#ffffffff"
         android:layout_below="@+id/alarm_toggle_switch"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_alignParentBottom="true"
-        android:choiceMode="multipleChoice" />
+        android:layout_marginTop="54dp" />
+
 </RelativeLayout>
