@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.MediaPlayer;
@@ -11,11 +12,19 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ListView;
 
+import com.frontline.pingdomalarm.domain.AlarmTrigger;
 import com.frontline.pingdomalarm.util.AlarmTriggerManager;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 
 public class HomeActivity extends Activity {
@@ -25,6 +34,34 @@ public class HomeActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        final ListView alarmTriggerList = (ListView) findViewById(R.id.alarmTriggers);
+        final List<AlarmTrigger> alarmTriggers = AlarmTriggerManager.getAllAlarmTriggers();
+        final StableArrayAdapter adapter = new StableArrayAdapter(this,
+                android.R.layout.simple_list_item_1, alarmTriggers);
+        alarmTriggerList.setAdapter(adapter);
+
+        alarmTriggerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, final View view,
+                                    int position, long id) {
+
+                final AlarmTrigger item = (AlarmTrigger) parent.getItemAtPosition(position);
+                view.animate().setDuration(2000).alpha(0)
+                        .withEndAction(new Runnable() {
+                            @Override
+                            public void run() {
+                                Log.i("remo", "attemping\n\n\n\n");
+                                adapter.remove(item);
+                                alarmTriggers.remove(item);
+                                Log.i("remo", "finished\n\n\n\n");
+                                adapter.notifyDataSetChanged();
+                                view.setAlpha(1);
+                            }
+                        });
+            }
+
+        });
     }
 
     @Override
@@ -57,7 +94,6 @@ public class HomeActivity extends Activity {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
                     String triggerText = triggerTextInputfield.getText().toString();
-                    Log.i("saving new match text",triggerText);
                     AlarmTriggerManager.createAlarmTrigger(triggerText);
                 }
             });
@@ -70,5 +106,34 @@ public class HomeActivity extends Activity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private class StableArrayAdapter extends ArrayAdapter<AlarmTrigger> {
+
+        List<AlarmTrigger> items = new ArrayList<AlarmTrigger>();
+
+        public StableArrayAdapter(Context context, int textViewResourceId,
+                                  List<AlarmTrigger> objects) {
+
+            super(context, textViewResourceId, objects);
+            items = objects;
+        }
+
+        @Override
+        public long getItemId(int position) {
+            //TODO remove this ugly hack of the ifs
+            if (position == items.size() && position != 0){
+                position--;
+            }
+            if (position == 0){
+                return 0L;
+            }
+            return items.get(position).getId();
+        }
+
+        @Override
+        public boolean hasStableIds() {
+            return true;
+        }
     }
 }

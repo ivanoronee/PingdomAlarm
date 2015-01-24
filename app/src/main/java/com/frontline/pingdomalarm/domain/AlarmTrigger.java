@@ -1,10 +1,10 @@
 package com.frontline.pingdomalarm.domain;
 
-import android.content.Context;
-
 import com.orm.SugarRecord;
 
 /**
+ * Domain object to represent a trigger for the alarm.
+ *
  * Created by frontline on 1/24/15.
  */
 public class AlarmTrigger extends SugarRecord<AlarmTrigger> {
@@ -19,5 +19,10 @@ public class AlarmTrigger extends SugarRecord<AlarmTrigger> {
 
     public AlarmTrigger(String matchText){
         this.matchText = matchText;
+    }
+
+    @Override
+    public String toString(){
+        return matchText;
     }
 }
