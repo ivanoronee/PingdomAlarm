@@ -15,11 +15,19 @@ import com.frontline.pingdomalarm.util.StringConstants;
 
 public class AlarmTonePlayer extends IntentService {
     public static final int ALARM_NOTIFICATION_ID = 1;
+    private static MediaPlayer mediaPlayer;
+
 
     public static void soundAlarm(Context context) {
         Intent intent = new Intent(context, AlarmTonePlayer.class);
         intent.setAction(StringConstants.ACTION_SOUNND_ALARM);
         context.startService(intent);
+    }
+
+    public static void stopAlarm(){
+        if (mediaPlayer != null){
+            mediaPlayer.stop();
+        }
     }
 
     public AlarmTonePlayer() {
@@ -38,7 +46,8 @@ public class AlarmTonePlayer extends IntentService {
 
     private void handleSoundAlarm() {
         Log.i("alarm player", "starting playback");
-        MediaPlayer mediaPlayer = MediaPlayer.create(this, R.raw.pingdom_alarm);
+        mediaPlayer = MediaPlayer.create(this, R.raw.pingdom_alarm);
+
         mediaPlayer.start();
 
         String songName = "server down";

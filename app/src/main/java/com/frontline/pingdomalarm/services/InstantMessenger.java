@@ -3,7 +3,6 @@ package com.frontline.pingdomalarm.services;
 import android.accessibilityservice.AccessibilityService;
 import android.accessibilityservice.AccessibilityServiceInfo;
 import android.app.Notification;
-import android.app.NotificationManager;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
