@@ -7,6 +7,7 @@
     <string name="title_activity_alarm">AlarmActivity</string>
     <string name="stopAlarm">Stop Alarm</string>
     <string name="toggle_alarm_switch_label">Alarm sound</string>
-    <string name="alarm_triggers">Alarm sounded as notification matches any one of below</string>
+    <string name="alarm_triggers">Alarm will be sounded if notification contains any one of;</string>
+    <string name="service_switch_label">Notification reader status</string>
 
 </resources>

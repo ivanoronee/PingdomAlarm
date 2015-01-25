@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.DragEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -35,6 +36,8 @@ public class HomeActivity extends Activity {
 
     private ListView alarmTriggerList;
     private Switch toggleAlarmSwitch;
+    private Switch toggleNotificationReaderService;
+    private final Context context = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,17 +45,39 @@ public class HomeActivity extends Activity {
         setContentView(R.layout.activity_home);
         alarmTriggerList = (ListView) findViewById(R.id.alarmTriggers);
         toggleAlarmSwitch = (Switch) findViewById(R.id.alarm_toggle_switch);
+        toggleNotificationReaderService = (Switch) findViewById(R.id.notification_reader_service_switch);
+
+        updateToggleNotificationReaderServiceSwitch();
         updateToggleAlarmSwitch();
         toggleAlarmSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (!isChecked) {
                     AlarmTonePlayer.stopAlarm();
-                    toggleAlarmSwitch.setEnabled(false);
+                }else{
+                    AlarmTonePlayer.soundAlarm(context);
                 }
             }
         });
+
+        toggleNotificationReaderService.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (!isChecked){
+                    NotificationsUtil.openDeviceAccessibilitySettings(context);
+                }
+            }
+        });
+
         attachAdapterToAlarmTriggerListView();
+    }
+
+    private void updateToggleNotificationReaderServiceSwitch(){
+        if (!NotificationsUtil.isAccessibilitySettingsOn(this)){
+            toggleNotificationReaderService.setChecked(false);
+        }
+        toggleNotificationReaderService.setChecked(true);
+        toggleNotificationReaderService.setEnabled(false);
     }
 
     private void updateToggleAlarmSwitch(){
@@ -66,6 +91,7 @@ public class HomeActivity extends Activity {
     public void onResume(){
         super.onResume();
         updateToggleAlarmSwitch();
+        updateToggleNotificationReaderServiceSwitch();
     }
 
     private void attachAdapterToAlarmTriggerListView() {
@@ -118,7 +144,6 @@ public class HomeActivity extends Activity {
         }
 
         if (id == R.id.action_add_trigger) {
-            AlarmTriggerManager alarmTriggerManager = new AlarmTriggerManager();
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("Add alarm trigger");
             builder.setMessage("Enter text that will be matched to trigger alarm");
