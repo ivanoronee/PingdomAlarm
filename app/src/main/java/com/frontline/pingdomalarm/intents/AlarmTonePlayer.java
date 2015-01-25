@@ -7,6 +7,7 @@ import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 
 import com.frontline.pingdomalarm.HomeActivity;
@@ -18,6 +19,7 @@ public class AlarmTonePlayer extends IntentService {
     public static final int ALARM_NOTIFICATION_ID = 1;
     private static MediaPlayer mediaPlayer;
     private static boolean alarmOn = false;
+    private  static int origionalVolume;
 
 
     public AlarmTonePlayer() {
@@ -30,11 +32,8 @@ public class AlarmTonePlayer extends IntentService {
         context.startService(intent);
     }
 
-    public static void stopAlarm() {
-        if (mediaPlayer != null) {
-            mediaPlayer.stop();
-            alarmOn = false;
-        }
+    public static void stopAlarm(Context context) {
+        handleStopAlarm(context);
     }
 
     @Override
@@ -42,7 +41,7 @@ public class AlarmTonePlayer extends IntentService {
         if (intent != null) {
             final String action = intent.getAction();
             if (StringConstants.ACTION_SOUNND_ALARM.equals(action)) {
-                handleSoundAlarm();
+                handleSoundAlarm(this);
             }
         }
     }
@@ -51,9 +50,21 @@ public class AlarmTonePlayer extends IntentService {
         return alarmOn;
     }
 
-    private void handleSoundAlarm() {
+    private static void handleStopAlarm(Context context){
+        if (mediaPlayer == null) {
+           return;
+        }
+        mediaPlayer.stop();
+        resetOrigionalVolume(context);
+        alarmOn = false;
+        NotificationManager nMgr = (NotificationManager) context.getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+        nMgr.cancel(ALARM_NOTIFICATION_ID);
+    }
+
+    private void handleSoundAlarm(Context context) {
         mediaPlayer = MediaPlayer.create(this, R.raw.pingdom_alarm);
         mediaPlayer.start();
+        maxDeviceVolume(context);
         alarmOn = true;
         createAlarmRunningNotification();
     }
@@ -62,7 +73,7 @@ public class AlarmTonePlayer extends IntentService {
         Notification.Builder mBuilder = new Notification.Builder(this)
                 .setSmallIcon(R.drawable.ic_launcher)
                 .setContentTitle(StringConstants.ALARM_NOTIFICATION_HEADER)
-                .setContentText("You gotta check the cloud!!");
+                .setContentText("You gotta check alfred!!");
 
         Intent resultIntent = new Intent(this, HomeActivity.class);
 
@@ -80,5 +91,16 @@ public class AlarmTonePlayer extends IntentService {
         NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         // mId allows you to update the notification later on.
         mNotificationManager.notify(ALARM_NOTIFICATION_ID, mBuilder.build());
+    }
+
+    private static void maxDeviceVolume(Context context){
+        AudioManager mAudioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+        origionalVolume = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+        mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC), 0);
+    }
+
+    private static void resetOrigionalVolume(Context context){
+        AudioManager mAudioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+        mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, origionalVolume, 0);
     }
 }

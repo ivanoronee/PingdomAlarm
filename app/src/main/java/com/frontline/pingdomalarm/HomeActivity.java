@@ -53,7 +53,7 @@ public class HomeActivity extends Activity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (!isChecked) {
-                    AlarmTonePlayer.stopAlarm();
+                    AlarmTonePlayer.stopAlarm(context);
                 }else{
                     AlarmTonePlayer.soundAlarm(context);
                 }
