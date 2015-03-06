@@ -26,6 +26,9 @@ import com.frontline.pingdomalarm.intents.AlarmTonePlayer;
 import com.frontline.pingdomalarm.util.AlarmTriggerManager;
 import com.frontline.pingdomalarm.util.NotificationsUtil;
 
+import org.acra.ACRA;
+import org.apache.log4j.Logger;
+
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,6 +36,8 @@ import java.util.List;
 
 
 public class HomeActivity extends Activity {
+
+    private final Logger log = Logger.getLogger(HomeActivity.class);
 
     private ListView alarmTriggerList;
     private Switch toggleAlarmSwitch;
@@ -42,6 +47,7 @@ public class HomeActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        log.info("started the home activity");
         setContentView(R.layout.activity_home);
         alarmTriggerList = (ListView) findViewById(R.id.alarmTriggers);
         toggleAlarmSwitch = (Switch) findViewById(R.id.alarm_toggle_switch);
@@ -124,6 +130,10 @@ public class HomeActivity extends Activity {
         adapter.notifyDataSetChanged();
     }
 
+    private void sendErrorLogs(){
+        ACRA.getErrorReporter().handleException(new Exception("user initiated exception upload"));
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -162,6 +172,12 @@ public class HomeActivity extends Activity {
 
             builder.create().show();
 
+            return true;
+        }
+
+        if (id == R.id.action_send_logs_trigger) {
+            log.info("preparing to send error logs");
+            sendErrorLogs();
             return true;
         }
 

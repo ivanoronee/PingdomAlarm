@@ -2,6 +2,7 @@ package com.frontline.pingdomalarm.util;
 
 import com.frontline.pingdomalarm.domain.AlarmTrigger;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -15,7 +16,8 @@ public class AlarmTriggerManager {
     }
 
     public static List<AlarmTrigger> getAllAlarmTriggers(){
-        return AlarmTrigger.listAll(AlarmTrigger.class);
+        List<AlarmTrigger> triggers = (ArrayList<AlarmTrigger>)AlarmTrigger.findWithQuery(AlarmTrigger.class, "select * from alarm_trigger");
+        return triggers;//AlarmTrigger.listAll(AlarmTrigger.class);
     }
 
     public static void deleteAlarmTrigger(AlarmTrigger alarmTrigger){
