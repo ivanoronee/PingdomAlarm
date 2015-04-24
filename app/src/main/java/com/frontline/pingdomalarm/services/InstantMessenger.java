@@ -15,6 +15,8 @@ import com.frontline.pingdomalarm.intents.AlarmTonePlayer;
 import com.frontline.pingdomalarm.util.AlarmTriggerManager;
 import com.frontline.pingdomalarm.util.StringConstants;
 
+import org.apache.log4j.Logger;
+
 import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -22,7 +24,7 @@ import java.util.Date;
 import java.util.List;
 
 public class InstantMessenger extends AccessibilityService {
-    private static final String TAG = InstantMessenger.class.getSimpleName();
+    private final Logger log = Logger.getLogger(InstantMessenger.class);
 
     public boolean isInit = false;
 
@@ -34,14 +36,20 @@ public class InstantMessenger extends AccessibilityService {
             }
             Notification notification = (Notification) event.getParcelableData();
             List<String> notificationText = getText(notification);
-            Log.i("notification:\n\n\n\n\n", ""+notificationText);
+            Log.i("notification:", ""+notificationText);
             List<AlarmTrigger> alarmTriggers = AlarmTriggerManager.getAllAlarmTriggers();
+
+            if (notificationText == null){
+                log.warn("found no notification text");
+                return;
+            }
+
             for (String string: notificationText)
             {
                 Log.i("looping", "looping through");
                 for (AlarmTrigger alarmTrigger: alarmTriggers){
                     if (string.contains(alarmTrigger.getMatchText())) {
-                        Log.i(TAG, "notification read: "+getText(notification));
+                        log.info("notification read: "+getText(notification));
                         AlarmTonePlayer.soundAlarm(this);
                         return;
                     }
