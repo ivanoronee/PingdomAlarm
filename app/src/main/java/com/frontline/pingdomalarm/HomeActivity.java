@@ -60,7 +60,7 @@ public class HomeActivity extends Activity {
         toggleAlarmSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (!isChecked) {
+               if (!isChecked) {
                     AlarmTonePlayer.stopAlarm(context);
                 }else{
                     AlarmTonePlayer.soundAlarm(context);
@@ -89,10 +89,22 @@ public class HomeActivity extends Activity {
     }
 
     public static void updateToggleAlarmSwitch(){
+        toggleAlarmSwitch.setOnCheckedChangeListener(null);
         if (AlarmTonePlayer.isAlarmOn()){
-            toggleAlarmSwitch.setEnabled(true);
             toggleAlarmSwitch.setChecked(true);
+        }else{
+            toggleAlarmSwitch.setChecked(false);
         }
+        toggleAlarmSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (!isChecked) {
+                    AlarmTonePlayer.stopAlarm(homeActivityContext);
+                }else{
+                    AlarmTonePlayer.soundAlarm(homeActivityContext);
+                }
+            }
+        });
     }
 
     @Override
