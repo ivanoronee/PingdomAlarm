@@ -22,7 +22,7 @@ import java.util.Date;
 import java.util.List;
 
 public class InstantMessenger extends AccessibilityService {
-
+    private static final String TAG = InstantMessenger.class.getSimpleName();
 
     public boolean isInit = false;
 
@@ -41,7 +41,7 @@ public class InstantMessenger extends AccessibilityService {
                 Log.i("looping", "looping through");
                 for (AlarmTrigger alarmTrigger: alarmTriggers){
                     if (string.contains(alarmTrigger.getMatchText())) {
-                        Log.i("notificatin info recied:", "" + getText(notification));
+                        Log.i(TAG, "notification read: "+getText(notification));
                         AlarmTonePlayer.soundAlarm(this);
                         return;
                     }

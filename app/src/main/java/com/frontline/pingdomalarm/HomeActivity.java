@@ -40,9 +40,11 @@ public class HomeActivity extends Activity {
     private final Logger log = Logger.getLogger(HomeActivity.class);
 
     private ListView alarmTriggerList;
-    private Switch toggleAlarmSwitch;
+    private static Switch toggleAlarmSwitch;
     private Switch toggleNotificationReaderService;
     private final Context context = this;
+    public static boolean activityVisible = false;
+    public static Context homeActivityContext = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,7 +88,7 @@ public class HomeActivity extends Activity {
         toggleNotificationReaderService.setEnabled(false);
     }
 
-    private void updateToggleAlarmSwitch(){
+    public static void updateToggleAlarmSwitch(){
         if (AlarmTonePlayer.isAlarmOn()){
             toggleAlarmSwitch.setEnabled(true);
             toggleAlarmSwitch.setChecked(true);
@@ -98,6 +100,15 @@ public class HomeActivity extends Activity {
         super.onResume();
         updateToggleAlarmSwitch();
         updateToggleNotificationReaderServiceSwitch();
+        activityVisible = true;
+        homeActivityContext = context;
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        activityVisible = false;
+        homeActivityContext = null;
     }
 
     private void attachAdapterToAlarmTriggerListView() {

@@ -1,5 +1,6 @@
 package com.frontline.pingdomalarm.intents;
 
+import android.app.Activity;
 import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -18,7 +19,7 @@ import com.frontline.pingdomalarm.util.StringConstants;
 public class AlarmTonePlayer extends IntentService {
     public static final int ALARM_NOTIFICATION_ID = 1;
     private static MediaPlayer mediaPlayer;
-    private static boolean alarmOn = false;
+    public static boolean alarmOn = false;
     private  static int origionalVolume;
 
 
@@ -66,6 +67,14 @@ public class AlarmTonePlayer extends IntentService {
         mediaPlayer.start();
         maxDeviceVolume(context);
         alarmOn = true;
+        if (HomeActivity.activityVisible && HomeActivity.homeActivityContext != null){
+            ((Activity) HomeActivity.homeActivityContext).runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    HomeActivity.updateToggleAlarmSwitch();
+                }
+            });
+        }
         createAlarmRunningNotification();
     }
 
